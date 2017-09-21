@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('register/account', 'AuthController@register');
 Route::post('login/account', 'AuthController@login');
+Route::post('profiles/create', 'ProfileController@create')->middleware('jwt.auth');
