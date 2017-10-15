@@ -55,12 +55,12 @@ class AuthController extends Controller
 
     }
 
-    public function edit()
+    public function change_password()
     {
 
     }
 
-    public function forget()
+    public function forget_password()
     {
 
     }
