@@ -180,6 +180,9 @@ return [
 
         // menambahkan provider JWT
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+
+        //menambahkan provider Fractal
+        Spatie\Fractal\FractalServiceProvider::class,
     ],
 
     /*
@@ -231,6 +234,9 @@ return [
 
         //menambahkan aliases JWT
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+
+        //menambahkan alises dari Fractal
+        'Fractal' => Spatie\Fractal\FractalFacade::class,
 
     ],
 
