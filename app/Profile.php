@@ -2,19 +2,20 @@
 
 namespace App;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model
 {
     //manambahkan daftar yang ditampilkan
-    protected $tabel = 'profiles';
+    //protected $table = 'profiles';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-    	'fullname', 'phone', 'status', 'avatar',
+    	'fullname', 'phone', 'status', 'avatar', 'secret_code'
     ];
 
     /**
@@ -23,8 +24,7 @@ class Profile extends Model
      * @var array
      */
     protected $hidden = [
-        'membership', 'secret_code',
+        'membership',
     ];
-
-    
+   
 }

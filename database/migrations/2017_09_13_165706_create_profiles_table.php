@@ -21,7 +21,7 @@ class CreateProfilesTable extends Migration
             $table->enum('status', ['penjual', 'pembeli']);
             $table->string('membership', 8)->default('bronze');
             $table->string('avatar')->default('default.jpg');
-            $table->integer('secret_code');
+            $table->string('secret_code');
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
