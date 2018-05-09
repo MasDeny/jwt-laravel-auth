@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateProductsPhotosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('products_photos', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('username', 50);
-            $table->string('email')->unique()->nullable();
-            $table->string('phone', 15)->nullable();
-            $table->string('password');
-            $table->enum('status', ['seller', 'buyer']);
+            $table->string('filename');
+            $table->string('mime');
+            $table->string('original_filename');
+            $table->integer('product_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 
@@ -31,6 +32,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('products_photos');
     }
 }

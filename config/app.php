@@ -238,6 +238,9 @@ return [
         //menambahkan alises dari Fractal
         'Fractal' => Spatie\Fractal\FractalFacade::class,
 
+        //menambahkan random number
+        'Keygen' => Keygen\Keygen::class,
+
     ],
 
 ];
