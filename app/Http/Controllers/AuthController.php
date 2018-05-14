@@ -15,17 +15,21 @@ class AuthController extends Controller
     public function register(Request $request)
     {
     	$this->validate($request, [
-    		'name' => 'required',
-    		'email' => 'required|email|unique:users,email',
-    		'password' => 'required|min:6|confirmed',
+    		'username'    => 'required',
+    		'email'       => 'required|email|unique:users,email',
+    		'password'    => 'required|min:6|confirmed',
+            'phone'       => 'required|min:10|max:13',
+            'status'      => 'required|in:seller,buyer',
     	]);
     	// dd($request->all());
 
     	// untuk menambahkan data user di tabel user
     	$user = User::create([
-    		'name' 		=> request('name'),
+    		'username' 	=> request('username'),
     		'email' 	=> request('email'),
-    		'password'	=> bcrypt(request('password'))
+    		'password'	=> bcrypt(request('password')),
+            'phone'     => request('phone'),
+            'status'    => request('status'),
     	]);
 
     	$token = JWTAuth::fromUser($user);
@@ -55,12 +59,17 @@ class AuthController extends Controller
 
     }
 
-    public function change_password()
+    public function change()
     {
 
     }
 
-    public function forget_password()
+    public function forget()
+    {
+
+    }
+
+    public function code()
     {
 
     }

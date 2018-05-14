@@ -18,9 +18,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 */
 Route::group(['prefix' => 'v1'], function() {
+
 Route::group(['prefix' => 'account'], function() {
-    Route::post('account/register', 'AuthController@register');
-    Route::post('account/login', 'AuthController@login');
+    Route::post('register', 'AuthController@register');
+    Route::post('login', 'AuthController@login');
+    Route::post('forget', 'AuthController@forget');
+    Route::post('change', 'AuthController@change');
+    Route::post('code', 'AuthController@code');
 });
 Route::post('profiles/create', 'ProfileController@create')->middleware('jwt.auth');
+
+
 });
