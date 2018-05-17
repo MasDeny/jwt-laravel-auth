@@ -6,6 +6,9 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use JWTAuth;
+use Keygen\Keygen;
+//use Nexmo;
+use Nasution\ZenzivaSms\Client as Sms;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
@@ -16,29 +19,34 @@ class AuthController extends Controller
     {
     	$this->validate($request, [
     		'username'    => 'required',
-    		'email'       => 'required|email|unique:users,email',
+    		'email'       => 'email|unique:users,email',
     		'password'    => 'required|min:6|confirmed',
-            'phone'       => 'required|min:10|max:13',
+            'phone'       => 'min:10|max:13',
             'status'      => 'required|in:seller,buyer',
     	]);
     	// dd($request->all());
-
+        $key_code = Keygen::numeric(5)->generate();
     	// untuk menambahkan data user di tabel user
     	$user = User::create([
     		'username' 	=> request('username'),
     		'email' 	=> request('email'),
     		'password'	=> bcrypt(request('password')),
             'phone'     => request('phone'),
+            'code'      => $key_code,
             'status'    => request('status'),
     	]);
 
     	$token = JWTAuth::fromUser($user);
-    	return response()->json(['token_type' => 'Bearer ', 'token' => $token], 201);
+        $phone = $request->get('phone');
+        $email = $request->get('email');
+        $username = $request->get('username');
+        $this->send_code($email, $key_code, $phone, $username);
+    	return response()->json(['token_type' => 'Bearer ', 'token' => $token, 'status' => 'kode OTP terkirim'], 201);
     }
 
     public function login()
     {
-    	$credentials = request()->only('email','password');
+    	$credentials = request()->only('username','password');
 
     	try
     	{
@@ -69,8 +77,26 @@ class AuthController extends Controller
 
     }
 
-    public function code()
+    public function send_code($email, $key_code, $phone, $username)
+    {
+        if ( !empty ( $email ) ) {
+
+        }else {
+            $sms = new Sms('hm0opd', 'Onfood');
+            $sms->to($phone)
+            ->text('Terimakasih '.$username.' telah menggunakan Aplikasi On-Food. Berikut Adalah kode konfirmasi untuk nomor anda '.$key_code.'.')
+            ->send();
+            //echo 'success';
+            // Nexmo::message()->send([
+            // 'to'   => '6285236938602',
+            // 'from' => '6285815301508',
+            // 'text' => 'Terimakasih, '.$username.' telah menggunakan produk kami. Berikut Adalah kode konfirmasi untuk nomor anda '.$key_code.'.'
+            // ]);
+        }
+    }
+    public function confirm_code()
     {
 
     }
+
 }

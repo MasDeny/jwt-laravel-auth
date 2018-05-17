@@ -19,7 +19,9 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('phone', 15)->nullable();
             $table->string('password');
+            $table->char('code', 5);
             $table->enum('status', ['seller', 'buyer']);
+            $table->char('status_user', 2)->default('0');
             $table->timestamps();
         });
     }

@@ -24,7 +24,7 @@ Route::group(['prefix' => 'account'], function() {
     Route::post('login', 'AuthController@login');
     Route::post('forget', 'AuthController@forget');
     Route::post('change', 'AuthController@change');
-    Route::post('code', 'AuthController@code');
+    Route::post('confirm_code', 'AuthController@confirm_code')->middleware('jwt.auth');
 });
 Route::post('profiles/create', 'ProfileController@create')->middleware('jwt.auth');
 

@@ -183,6 +183,11 @@ return [
 
         //menambahkan provider Fractal
         Spatie\Fractal\FractalServiceProvider::class,
+
+        //menambahkan provide nexmo untuk mengirim kode melalui sms
+        //Nexmo\Laravel\NexmoServiceProvider::class,
+
+        Nasution\ZenzivaSms\NotificationServiceProvider::class,
     ],
 
     /*
@@ -240,6 +245,8 @@ return [
 
         //menambahkan random number
         'Keygen' => Keygen\Keygen::class,
+        //mengirim kode konfirmasi melalui sms
+        //'Nexmo' => Nexmo\Laravel\Facade\Nexmo::class,
 
     ],
 
