@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use JWTAuth;
 use Keygen\Keygen;
-//use Nexmo;
 use Nasution\ZenzivaSms\Client as Sms;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -74,14 +74,17 @@ class AuthController extends Controller
 
     public function forget()
     {
-
+        Mail::send('emails.reset', ['username' => $username, 'key_code' => $key_code], function ($message) use($email)
+        {
+        $message->from('me@gmail.com', 'Support On-food');
+        $message->to( $email );
+        $message->subject('On-food Password Reset');
+        });
     }
 
     public function send_code($email, $key_code, $phone, $username)
     {
-        if ( !empty ( $email ) ) {
-
-        }else {
+        if ( !empty ( $phone ) ) {
             $sms = new Sms('hm0opd', 'Onfood');
             $sms->to($phone)
             ->text('Terimakasih '.$username.' telah menggunakan Aplikasi On-Food. Berikut Adalah kode konfirmasi untuk nomor anda '.$key_code.'.')
@@ -92,6 +95,13 @@ class AuthController extends Controller
             // 'from' => '6285815301508',
             // 'text' => 'Terimakasih, '.$username.' telah menggunakan produk kami. Berikut Adalah kode konfirmasi untuk nomor anda '.$key_code.'.'
             // ]);
+        }else {
+            Mail::send('emails.send', ['username' => $username, 'key_code' => $key_code], function ($message) use($email)
+            {
+            $message->from('me@gmail.com', 'Support On-food');
+            $message->to( $email );
+            $message->subject('On-food code confirmation');
+            });
         }
     }
     public function confirm_code()
