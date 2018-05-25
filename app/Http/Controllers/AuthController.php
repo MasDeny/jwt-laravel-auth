@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Transformers\UserTransformer;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use JWTAuth;
@@ -18,7 +20,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
     	$this->validate($request, [
-    		'username'    => 'required',
+    		'username'    => 'required|unique:users,username',
     		'email'       => 'email|unique:users,email',
     		'password'    => 'required|min:6|confirmed',
             'phone'       => 'min:10|max:13',
@@ -41,7 +43,7 @@ class AuthController extends Controller
         $email = $request->get('email');
         $username = $request->get('username');
         $this->send_code($email, $key_code, $phone, $username);
-    	return response()->json(['token_type' => 'Bearer ', 'token' => $token, 'status' => 'kode OTP terkirim'], 201);
+    	return response()->json(['token_type' => 'Bearer ', 'token' => $token, 'success' => 'kode OTP terkirim'], 201);
     }
 
     public function login()
@@ -63,27 +65,70 @@ class AuthController extends Controller
     		return response()->json(['error' => 'login gagal, periksa kembali koneksi anda'], 500);
     	}
 
-    	return response()->json(['token_type' => 'Bearer ', 'token' => $token], 200);
+        $user = JWTAuth::toUser($token);
+    	return fractal()
+            ->item($user)
+            ->transformWith(new UserTransformer)
+            ->addMeta([
+                'token_type'    => 'Bearer ',
+                'token'         => $token,
+                'success'  => 'Berhasil Login'
+            ])
+            ->toArray();
 
     }
 
-    public function change()
+    public function change(Request $request)
     {
+        try {
+        if (! $user = JWTAuth::parseToken()->authenticate()) {
+        return response()->json(['user tidak ditemukan'], 404);
+        }
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+        return response()->json(['token_expired'], $e->getStatusCode());
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+        return response()->json(['token_invalid'], $e->getStatusCode());
+        } catch (JWTException $e) {
+        return response()->json(['token_absent'], $e->getStatusCode());
+        }
+        $this->validate($request, [
+            'old_password' => 'required',
+            'new_password' => 'required|string|min:6|confirmed',
+        ]);
+        $oldPassword    = $request->old_password;
+        $newPassword    = $request->new_password;
+        if (!(Hash::check($oldPassword, $user->password))) {
+            // The passwords matches
+        return response()->json(['error' => 'Password lama anda salah. Silahkan ulangi lagi'], 500);
+        }
 
+        if(strcmp($oldPassword, $newPassword) == 0){
+            //Current password and new password are same
+            return response()->json(['error' => 'Password baru tidak boleh sama dengan password lama. Silahkan ganti dengan password yang lain'], 500);
+        }
+        //dd('hell yeah bitch !');
+        $user->password = bcrypt($newPassword);
+        $user->save();
+       return response()->json(['success' => 'Password telah berhasil diganti !'], 200);
     }
 
     public function forget()
     {
+        try {
         Mail::send('emails.reset', ['username' => $username, 'key_code' => $key_code], function ($message) use($email)
         {
         $message->from('me@gmail.com', 'Support On-food');
         $message->to( $email );
         $message->subject('On-food Password Reset');
         });
+        } catch (Exception $e) {
+            return response()->json(['error' => 'proses gagal, periksa kembali koneksi anda'], 500);
+        }
     }
 
     public function send_code($email, $key_code, $phone, $username)
     {
+        try {
         if ( !empty ( $phone ) ) {
             $sms = new Sms('hm0opd', 'Onfood');
             $sms->to($phone)
@@ -103,9 +148,23 @@ class AuthController extends Controller
             $message->subject('On-food code confirmation');
             });
         }
+    } catch (JWTException $e) {
+        return response()->json(['error' => 'proses gagal, periksa kembali koneksi anda'], 500);
     }
-    public function confirm_code()
+    }
+    public function confirm_code(Request $request)
     {
+        try {
+            return fractal()
+            ->item($user)
+            ->transformWith(new UserTransformer)
+            ->addMeta([
+                'success'  => 'Berhasil Register'
+            ])
+            ->toArray();
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'register gagal, periksa kembali koneksi anda'], 500);
+        }
 
     }
 
