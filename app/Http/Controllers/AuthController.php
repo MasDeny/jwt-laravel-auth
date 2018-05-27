@@ -15,8 +15,8 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
-    //
 
+    //Fungsi untuk mendaftar pada aplikasi
     public function register(Request $request)
     {
     	$this->validate($request, [
@@ -46,25 +46,76 @@ class AuthController extends Controller
     	return response()->json(['token_type' => 'Bearer ', 'token' => $token, 'success' => 'kode OTP terkirim'], 201);
     }
 
+    public function send_code($email, $key_code, $phone, $username)
+    {
+        try {
+        if ( !empty ( $phone ) ) {
+            $sms = new Sms('hm0opd', 'Onfood');
+            $sms->to($phone)
+            ->text('Terimakasih '.$username.' telah menggunakan Aplikasi On-Food. Berikut Adalah kode konfirmasi untuk nomor anda '.$key_code.'.')
+            ->send();
+            //echo 'success';
+            // Nexmo::message()->send([
+            // 'to'   => '6285236938602',
+            // 'from' => '6285815301508',
+            // 'text' => 'Terimakasih, '.$username.' telah menggunakan produk kami. Berikut Adalah kode konfirmasi untuk nomor anda '.$key_code.'.'
+            // ]);
+        }else {
+            Mail::send('emails.send', ['username' => $username, 'key_code' => $key_code], function ($message) use($email)
+            {
+            $message->from('me@gmail.com', 'Support On-food');
+            $message->to( $email );
+            $message->subject('On-food code confirmation');
+            });
+        }
+    } catch (JWTException $e) {
+        return response()->json(['error' => 'proses gagal, periksa kembali koneksi anda'], 500);
+    }
+    }
+
+    public function confirm_code(Request $request)
+    {
+        $this->validate($request, [
+            'code' => 'required|min:5',
+        ]);
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            if ($request->code !== $user->code) {
+                return response()->json(['error' => 'Kode konfirmasi salah !'], 500);
+            } else {
+                //mengganti status user dari 0 ke 1 (jika akun berhasil teregristasi)
+                $user->status_user = '1';
+                $user->save();
+                return fractal()
+                ->item($user)
+                ->transformWith(new UserTransformer)
+                ->addMeta([
+                    'success'  => 'Kode Konfirmasi sesuai'
+                ])
+                ->toArray();
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'register gagal, periksa kembali koneksi anda'], 500);
+        }
+
+    }
+
+    //fungsi untuk login pada aplikasi
     public function login()
     {
     	$credentials = request()->only('username','password');
-
     	try
     	{
     		$token = JWTAuth::attempt($credentials);
-
     		if (!$token)
     		{
     			return response()->json(['error' => 'login gagal, periksa kembali username atau password'], 401);
     		}
-
     	}
     	catch(JWTException $e)
     	{
     		return response()->json(['error' => 'login gagal, periksa kembali koneksi anda'], 500);
     	}
-
         $user = JWTAuth::toUser($token);
     	return fractal()
             ->item($user)
@@ -72,12 +123,13 @@ class AuthController extends Controller
             ->addMeta([
                 'token_type'    => 'Bearer ',
                 'token'         => $token,
-                'success'  => 'Berhasil Login'
+                'success'       => 'Berhasil Login'
             ])
             ->toArray();
 
     }
 
+    //fungsi untuk mengganti password pada aplikasi
     public function change(Request $request)
     {
         try {
@@ -112,10 +164,27 @@ class AuthController extends Controller
        return response()->json(['success' => 'Password telah berhasil diganti !'], 200);
     }
 
-    public function forget()
+    //fungsi untuk reset password melalui email
+    public function reset_password(Request $request)
+    {
+        $this->validate($request, [
+            'email'       => 'required',
+        ]);
+        $email = $request->email;
+        $email_validate = !!User::where('email', $email)->first();
+        if (!$email_validate) {
+            return response()->json(['error' => 'Email tidak ditemukan, silahkan isi email secara valid'], 404);
+        } else {
+            $key_code = Keygen::numeric(5)->generate();
+            $this->send_reset($email, $key_code);
+             return response()->json(['success' => 'Reset password terkirim, silahkan cek email anda']);
+        }
+    }
+
+    public function send_reset($email, $key_code)
     {
         try {
-        Mail::send('emails.reset', ['username' => $username, 'key_code' => $key_code], function ($message) use($email)
+        Mail::send('emails.reset', ['key_code' => $key_code], function ($message) use($email)
         {
         $message->from('me@gmail.com', 'Support On-food');
         $message->to( $email );
@@ -124,48 +193,6 @@ class AuthController extends Controller
         } catch (Exception $e) {
             return response()->json(['error' => 'proses gagal, periksa kembali koneksi anda'], 500);
         }
-    }
-
-    public function send_code($email, $key_code, $phone, $username)
-    {
-        try {
-        if ( !empty ( $phone ) ) {
-            $sms = new Sms('hm0opd', 'Onfood');
-            $sms->to($phone)
-            ->text('Terimakasih '.$username.' telah menggunakan Aplikasi On-Food. Berikut Adalah kode konfirmasi untuk nomor anda '.$key_code.'.')
-            ->send();
-            //echo 'success';
-            // Nexmo::message()->send([
-            // 'to'   => '6285236938602',
-            // 'from' => '6285815301508',
-            // 'text' => 'Terimakasih, '.$username.' telah menggunakan produk kami. Berikut Adalah kode konfirmasi untuk nomor anda '.$key_code.'.'
-            // ]);
-        }else {
-            Mail::send('emails.send', ['username' => $username, 'key_code' => $key_code], function ($message) use($email)
-            {
-            $message->from('me@gmail.com', 'Support On-food');
-            $message->to( $email );
-            $message->subject('On-food code confirmation');
-            });
-        }
-    } catch (JWTException $e) {
-        return response()->json(['error' => 'proses gagal, periksa kembali koneksi anda'], 500);
-    }
-    }
-    public function confirm_code(Request $request)
-    {
-        try {
-            return fractal()
-            ->item($user)
-            ->transformWith(new UserTransformer)
-            ->addMeta([
-                'success'  => 'Berhasil Register'
-            ])
-            ->toArray();
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'register gagal, periksa kembali koneksi anda'], 500);
-        }
-
     }
 
 }

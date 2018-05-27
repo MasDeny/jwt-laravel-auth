@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Oxygen Welcome</title>
+  <title>Oxygen Reignite</title>
 
   <style type="text/css">
     /* Take care of image borders and formatting, client hacks */
@@ -60,7 +60,7 @@
       font-size: 32px;
       font-weight: 700;
       line-height: normal;
-      padding: 35px 0 0;
+      padding: 15px 0 0;
       color: #4d4d4d;
     }
 
@@ -102,12 +102,25 @@
     }
 
     .button {
-      padding: 30px 0;
+      padding: 55px 0 0;
     }
 
     .info-block {
       padding: 0 20px;
       width: 260px;
+    }
+
+    .mini-block-container {
+      padding: 30px 50px;
+      width: 500px;
+    }
+
+    .mini-block {
+      background-color: #ffffff;
+      width: 498px;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      padding: 60px 75px;
     }
 
     .block-rounded {
@@ -119,6 +132,43 @@
       border-radius: 5px 5px 0 0;
     }
 
+    .force-width-img {
+      width: 480px;
+      height: 1px !important;
+    }
+
+    .force-width-full {
+      width: 600px;
+      height: 1px !important;
+    }
+
+    .user-img img {
+      width: 82px;
+      border-radius: 5px;
+      border: 1px solid #cccccc;
+    }
+
+    .user-img {
+      width: 92px;
+      text-align: left;
+    }
+
+    .user-msg {
+      width: 236px;
+      font-size: 14px;
+      text-align: left;
+      font-style: italic;
+    }
+
+    .code-block {
+      padding: 10px 0;
+      border: 1px solid #cccccc;
+      color: #4d4d4d;
+      font-weight: bold;
+      font-size: 18px;
+      text-align: center;
+    }
+
     .force-width-gmail {
       min-width:600px;
       height: 0px !important;
@@ -126,7 +176,7 @@
       font-size: 1px !important;
     }
 
-    .button-width {
+     .button-width {
       width: 228px;
     }
 
@@ -194,11 +244,16 @@
       }
 
        td[class="button"] {
-        padding: 5px !important;
+        padding: 15px 0 5px !important;
       }
 
       td[class*="free-text"] {
         padding: 10px 18px 30px !important;
+      }
+
+      img[class="force-width-img"],
+      img[class="force-width-full"] {
+        display: none !important;
       }
 
       td[class="info-block"] {
@@ -210,6 +265,27 @@
       td[class="info-img"],
       img[class="info-img"] {
         width: 278px !important;
+      }
+
+      td[class="mini-block-container"] {
+        padding: 8px 20px !important;
+        width: 280px !important;
+      }
+
+      td[class="mini-block"] {
+        padding: 20px !important;
+      }
+
+      td[class="user-img"] {
+        display: block !important;
+        text-align: center !important;
+        width: 100% !important;
+        padding-bottom: 10px;
+      }
+
+      td[class="user-msg"] {
+        display: block !important;
+        padding-bottom: 20px !important;
       }
     }
   </style>
@@ -243,6 +319,10 @@
                   </tr>
                 </table>
               </center>
+              <!--[if gte mso 9]>
+              </v:textbox>
+            </v:rect>
+            <![endif]-->
             </td>
           </tr>
         </table>
@@ -255,51 +335,67 @@
         <table cellspacing="0" cellpadding="0" width="600" class="w320">
           <tr>
             <td class="header-lg">
-              Hi, {{$username}}!
+              Pemberitahuan Reset Password !
             </td>
           </tr>
           <tr>
             <td class="free-text">
-              Terima kasih telah mendaftar pada aplikasi On-food ! Semoga anda nyaman menggunakannya. Pesan berikut berisi kode konfirmasi untuk login pada aplikasi kami.
+              Anda menerima email ini dikarenakan ada permohonan lupa password pada akun on-food anda. Jika anda tidak merasa melakukan permohonan tersebut, abaikan saja email berikut.
+
+              Terima kasih telah menggunakan aplikasi On-food ! Semoga anda nyaman menggunakannya.
             </td>
           </tr>
           <tr>
-            <td class="button">
-              <div><a class="button-mobile"
-              style="background-color:#6F9EFF;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">{{$key_code}}</a></div>
+            <td class="mini-block-container">
+              <table cellspacing="0" cellpadding="0" width="100%"  style="border-collapse:separate !important;">
+                <tr>
+                  <td class="mini-block">
+                    <table cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td style="padding-bottom: 20px;">
+                          Berikut kode konfirmasi untuk reset password pada aplikasi On-food.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="code-block">
+                          {{$key_code}}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>
       </center>
     </td>
   </tr>
-  <tr>
-    <td align="center" valign="top" width="100%" style="background-color: #ffffff;  border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
-      <center>
-        <table cellpadding="0" cellspacing="0" width="600" class="w320">
-          <tr>
-            <td class="content-padding">
-              <table cellpadding="0" cellspacing="0" width="100%">
-                <tr>
-                  <td class="header-md">
-                    Cek Aplikasi Kami !
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding-bottom: 75px;">
-              <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:separate !important;">
-                <tr>
-                 <td class="info-block">
+  <td align="center" valign="top" width="100%" style="background-color: #ffffff;  border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;">
+    <center>
+      <table cellpadding="0" cellspacing="0" width="600" class="w320">
+        <tr>
+          <td class="content-padding">
+            <table cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td class="header-md">
+                  Cek Aplikasi Kami !
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding-bottom: 50px;">
+            <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:separate !important;">
+              <tr>
+                <td class="info-block">
                     <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:separate !important;">
                       <tr>
                         <td class="block-rounded">
                           <table cellpadding="0" cellspacing="0" width="100%">
                             <tr>
                               <td class="info-img">
-                                <a href=""><img class="info-img" src="http://s3.amazonaws.com/swu-filepicker/9wRy50HQTg2CTyZA5Ozi_item_images_16.jpg" alt="img" /></a>
                               </td>
                             </tr>
                             <tr>
@@ -313,14 +409,13 @@
                       </tr>
                     </table>
                   </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </center>
-    </td>
-  </tr>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </center>
+  </td>
   <tr>
     <td align="center" valign="top" width="100%" style="background-color: #f7f7f7; height: 100px;">
       <center>
@@ -328,7 +423,7 @@
           <tr>
             <td style="padding: 25px 0 25px">
               <strong>On-food Inc</strong><br />
-              1234 Awesome St <br />
+              Jl. Panduman no.12 <br />
               Jember, Jawa Timur <br />
               Indonesia <br /><br />
             </td>
