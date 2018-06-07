@@ -209,7 +209,7 @@ class AuthController extends Controller
         } else {
             DB::table('users')
             ->where('code', $new_code)
-            ->update(['status_user' => 1, 'password' => brcypt($new_password), ]);
+            ->update(['status_user' => 1, 'password' => bcrypt($new_password), ]);
             return response()->json(['success' => 'Password telah di ubah, silahkan lakukan login ulang']);
         }
         } catch (Exception $e) {
