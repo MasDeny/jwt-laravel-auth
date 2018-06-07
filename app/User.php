@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Profile;
+use App\Shop;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 

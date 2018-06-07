@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Transformers\UserTransformer;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -54,12 +55,6 @@ class AuthController extends Controller
             $sms->to($phone)
             ->text('Terimakasih '.$username.' telah menggunakan Aplikasi On-Food. Berikut Adalah kode konfirmasi untuk nomor anda '.$key_code.'.')
             ->send();
-            //echo 'success';
-            // Nexmo::message()->send([
-            // 'to'   => '6285236938602',
-            // 'from' => '6285815301508',
-            // 'text' => 'Terimakasih, '.$username.' telah menggunakan produk kami. Berikut Adalah kode konfirmasi untuk nomor anda '.$key_code.'.'
-            // ]);
         }else {
             Mail::send('emails.send', ['username' => $username, 'key_code' => $key_code], function ($message) use($email)
             {
@@ -83,7 +78,7 @@ class AuthController extends Controller
             if ($request->code !== $user->code) {
                 return response()->json(['error' => 'Kode konfirmasi salah !'], 500);
             } else {
-                //mengganti status user dari 0 ke 1 (jika akun berhasil teregristasi)
+                //mengganti status user dari 0 ke 1 (jika akun berhasil terdaftar)
                 $user->status_user = '1';
                 $user->save();
                 return fractal()
@@ -129,7 +124,7 @@ class AuthController extends Controller
 
     }
 
-    //fungsi untuk mengganti password pada aplikasi
+    // ! fungsi untuk mengganti password pada aplikasi
     public function change(Request $request)
     {
         try {
@@ -171,13 +166,14 @@ class AuthController extends Controller
             'email'       => 'required',
         ]);
         $email = $request->email;
+        $new_password = $request->new_password;
         $email_validate = !!User::where('email', $email)->first();
         if (!$email_validate) {
-            return response()->json(['error' => 'Email tidak ditemukan, silahkan isi email secara valid'], 404);
+            return response()->json(['error' => 'Kami tidak dapat menemukan akun dengan email '.$email], 404);
         } else {
             $key_code = Keygen::numeric(5)->generate();
             $this->send_reset($email, $key_code);
-             return response()->json(['success' => 'Reset password terkirim, silahkan cek email anda']);
+            return response()->json(['success' => 'Reset password terkirim, silahkan cek email anda']);
         }
     }
 
@@ -190,6 +186,32 @@ class AuthController extends Controller
         $message->to( $email );
         $message->subject('On-food Password Reset');
         });
+        DB::table('users')
+            ->where('email', $email)
+            ->update(['status_user' => 2, 'code' => $key_code, ]);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'proses gagal, periksa kembali koneksi anda'], 500);
+        }
+    }
+
+    public function reset_confirm(Request $request)
+    {
+        try{
+        $this->validate($request, [
+            'new_code'       => 'required',
+            'new_password'    => 'required|min:6|confirmed',
+        ]);
+        $new_code = $request->new_code;
+        $new_password = $request->new_password;
+        $code_validate = !!User::where('code', $new_code)->first();
+        if (!$code_validate) {
+            return response()->json(['error' => 'kode konfirmasi yang anda masukkan salah, silahkan isi kode konfirmasi secara valid', 'status' => 'false'], 404);
+        } else {
+            DB::table('users')
+            ->where('code', $new_code)
+            ->update(['status_user' => 1, 'password' => brcypt($new_password), ]);
+            return response()->json(['success' => 'Password telah di ubah, silahkan lakukan login ulang']);
+        }
         } catch (Exception $e) {
             return response()->json(['error' => 'proses gagal, periksa kembali koneksi anda'], 500);
         }

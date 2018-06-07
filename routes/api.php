@@ -25,8 +25,13 @@ Route::group(['prefix' => 'account'], function() {
     Route::post('reset', 'AuthController@reset_password');
     Route::put('change', 'AuthController@change')->middleware('jwt.auth');
     Route::post('confirm_code', 'AuthController@confirm_code')->middleware('jwt.auth');
+    Route::post('confirm_reset', 'AuthController@reset_confirm');
 });
-Route::post('profiles/create', 'ProfileController@create')->middleware('jwt.auth');
-
-
+Route::group(['prefix' => 'profile'], function() {
+    Route::post('create', 'ProfileController@create');
+    Route::put('edit','ProfileController@update_profile');
+    Route::post('avatar','ProfileController@update_avatar');
+    Route::get('show', 'ProfileController@show');
+    Route::get('index', 'ProfileController@show')
+});
 });
