@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Shop extends Model
 {
-    //
-    protected $table = Shops;
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +14,7 @@ class Shop extends Model
      * @var array
      */
     protected $fillable = [
-        'shop_name', 'owner', 'address', 'description', 'photo',
+        'shop_name', 'owner', 'address', 'description', 'avatar', 'user_id',
     ];
 
     /**
@@ -25,8 +23,20 @@ class Shop extends Model
      * @var array
      */
 
-public function user()
+    public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function product()
+    {
+        return $this->hasMany(Product::class);
+    }
+    public function review()
+    {
+
+    }
+    public function location()
+    {
+        return $this->hasMany(Product::class);
     }
 }

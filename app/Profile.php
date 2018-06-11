@@ -8,14 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Profile extends Model
 {
     //manambahkan daftar yang ditampilkan
-    protected $table = 'profiles';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-    	'fullname', 'sex', 'avatar', 'secret_code'
+    	'fullname', 'sex', 'avatar', 'user_id',
     ];
 
     /**
@@ -23,9 +22,6 @@ class Profile extends Model
      *
      * @var array
      */
-    protected $hidden = [
-        'membership',
-    ];
 
     public function user()
     {

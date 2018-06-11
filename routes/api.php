@@ -32,6 +32,6 @@ Route::group(['prefix' => 'profile'], function() {
     Route::put('edit','ProfileController@update_profile');
     Route::post('avatar','ProfileController@update_avatar');
     Route::get('show', 'ProfileController@show');
-    Route::get('index', 'ProfileController@show')
+    Route::get('index', 'ProfileController@show');
 });
 });
