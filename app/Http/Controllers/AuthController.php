@@ -79,7 +79,7 @@ class AuthController extends Controller
                 return response()->json(['error' => 'Kode konfirmasi salah !'], 500);
             } else {
                 //mengganti status user dari 0 ke 1 (jika akun berhasil terdaftar)
-                $this->user->update(['status_user' => '1']);
+                $user->update(['status_user' => '1']);
                 return fractal()
                 ->item($user)
                 ->transformWith(new UserTransformer)
