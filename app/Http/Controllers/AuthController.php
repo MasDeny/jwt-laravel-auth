@@ -188,9 +188,9 @@ class AuthController extends Controller
         $message->to( $email );
         $message->subject('On-food Password Reset');
         });
-        DB::table('users')
-            ->where('email', $email)
-            ->update(['status_user' => 2, 'code' => $key_code, ]);
+        // DB::table('users')
+        //     ->where('email', $email)
+        //     ->update(['status_user' => 2, 'code' => $key_code, ]);
         } catch (Exception $e) {
             return response()->json(['error' => 'proses gagal, periksa kembali koneksi anda'], 500);
         }

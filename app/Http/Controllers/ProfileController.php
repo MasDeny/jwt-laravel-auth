@@ -64,7 +64,7 @@ class ProfileController extends Controller
             'sex'       => request('sex'),
             'user_id'   => $this->user->id,
             ]);
-            $this->user->update(['phone' => $request->phone, 'status_user' => 3 ]);
+            $this->user->update(['phone' => $request->phone, 'status_user' => 2 ]);
 
 
             return fractal()
