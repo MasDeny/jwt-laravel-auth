@@ -111,6 +111,7 @@ class AuthController extends Controller
     		return response()->json(['error' => 'login gagal, periksa kembali koneksi anda'], 500);
     	}
         $user = JWTAuth::toUser($token);
+        if ($user->status_user == 1) {
     	return fractal()
             ->item($user)
             ->transformWith(new UserTransformer)
@@ -120,6 +121,8 @@ class AuthController extends Controller
                 'success'       => 'Berhasil Login'
             ])
             ->toArray();
+        }
+        return response()->json(['error' => 'silahkan, masukan kode user anda'], 500);
 
     }
 

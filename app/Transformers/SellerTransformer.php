@@ -20,7 +20,7 @@ class SellerTransformer extends TransformerAbstract
             'phone'         => $shop->user->phone,
             'address'       => $shop->address,
             'description'   => $shop->description,
-            'avatar'        => url('/').'/images/'.$shop->avatar,
+            'avatar'        => url('/').'/avatars/'.$shop->avatar,
             'created at'    => $shop->created_at->diffForHumans(),
         ];
     }

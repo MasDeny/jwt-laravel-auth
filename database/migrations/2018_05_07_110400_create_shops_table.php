@@ -19,7 +19,7 @@ class CreateShopsTable extends Migration
             $table->string('owner');
             $table->text('address');
             $table->text('description')->nullable();
-            $table->string('avatar')->default('avatars/default.jpg');
+            $table->string('avatar')->default('default.jpg');
             $table->integer('user_id')->unsigned();
             $table->timestamps();
 

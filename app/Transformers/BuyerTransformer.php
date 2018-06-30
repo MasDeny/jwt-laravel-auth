@@ -17,7 +17,7 @@ class BuyerTransformer extends TransformerAbstract
         return [
             'fullname'      => $profile->fullname,
             'sex'           => $profile->sex,
-            'avatar'        => url('/').'/images/'.$profile->avatar,
+            'avatar'        => url('/').'/avatars/'.$profile->avatar,
             'phone'         => $profile->user->phone,
             'created at'    => $profile->created_at->diffForHumans(),
         ];
