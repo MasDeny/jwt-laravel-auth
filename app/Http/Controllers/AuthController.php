@@ -122,7 +122,7 @@ class AuthController extends Controller
             ])
             ->toArray();
         }
-        return response()->json(['error' => 'silahkan, masukan kode user anda'], 500);
+        return response()->json(['error' => 'silahkan, masukan kode user anda'], 409);
 
     }
 
