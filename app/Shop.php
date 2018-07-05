@@ -37,6 +37,6 @@ class Shop extends Model
     }
     public function location()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasOne(Location::class);
     }
 }

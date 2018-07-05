@@ -43,7 +43,7 @@ class ProfileController extends Controller
             'description'   => request('description'),
             'user_id'       => $this->user->id,
             ]);
-            $this->user->update(['phone' => $request->phone, 'status_user' => 3 ]);
+            $this->user->update(['phone' => $request->phone, 'status_user' => 2 ]);
 
             return fractal()
             ->item($shop)
@@ -73,7 +73,7 @@ class ProfileController extends Controller
             ->addMeta(['success'  => 'Profil pembeli telah dibuat'], 201)
             ->toArray();
         }
-        return response()->json(['error' => 'Pembuatan profil gagal, akun anda telah memiliki profil'], 500);
+        return response()->json(['error' => 'Pembuatan profil gagal, akun anda telah memiliki profil'], 409);
         } catch (JWTException $e) {
             return response()->json(['error' => 'Pembuatan profil gagal, periksa kembali koneksi anda'], 500);
         }

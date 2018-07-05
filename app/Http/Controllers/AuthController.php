@@ -76,7 +76,7 @@ class AuthController extends Controller
         try {
             $user = JWTAuth::parseToken()->authenticate();
             if ($request->code !== $user->code) {
-                return response()->json(['error' => 'Kode konfirmasi salah !'], 500);
+                return response()->json(['error' => 'Kode konfirmasi salah !'], 409);
             } else {
                 //mengganti status user dari 0 ke 1 (jika akun berhasil terdaftar)
                 $user->update(['status_user' => '1']);
@@ -148,17 +148,17 @@ class AuthController extends Controller
         $newPassword    = $request->new_password;
         if (!(Hash::check($oldPassword, $user->password))) {
             // The passwords matches
-        return response()->json(['error' => 'Password lama anda salah. Silahkan ulangi lagi'], 500);
+        return response()->json(['error' => 'Password lama anda salah. Silahkan ulangi lagi'], 409);
         }
 
         if(strcmp($oldPassword, $newPassword) == 0){
             //Current password and new password are same
-            return response()->json(['error' => 'Password baru tidak boleh sama dengan password lama. Silahkan ganti dengan password yang lain'], 500);
+            return response()->json(['error' => 'Password baru tidak boleh sama dengan password lama. Silahkan ganti dengan password yang lain'], 406);
         }
         //dd('hell yeah bitch !');
         $user->password = bcrypt($newPassword);
         $user->save();
-       return response()->json(['success' => 'Password telah berhasil diganti !'], 200);
+       return response()->json(['success' => 'Password telah berhasil diganti !']);
     }
 
     //fungsi untuk reset password melalui email
