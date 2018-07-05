@@ -122,7 +122,7 @@ class AuthController extends Controller
             ])
             ->toArray();
         }
-        return response()->json(['error' => 'silahkan, masukan kode user anda'], 409);
+        return response()->json(['email' => $user->email, 'token' => $token,'error' => 'silahkan, masukan kode user anda'], 401);
 
     }
 
@@ -148,7 +148,7 @@ class AuthController extends Controller
         $newPassword    = $request->new_password;
         if (!(Hash::check($oldPassword, $user->password))) {
             // The passwords matches
-        return response()->json(['error' => 'Password lama anda salah. Silahkan ulangi lagi'], 409);
+        return response()->json(['error' => 'Password lama anda salah. Silahkan ulangi lagi'], 412);
         }
 
         if(strcmp($oldPassword, $newPassword) == 0){
@@ -188,9 +188,9 @@ class AuthController extends Controller
         $message->to( $email );
         $message->subject('On-food Password Reset');
         });
-        // DB::table('users')
-        //     ->where('email', $email)
-        //     ->update(['status_user' => 2, 'code' => $key_code, ]);
+        DB::table('users')
+             ->where('email', $email)
+             ->update(['code' => $key_code, ]);
         } catch (Exception $e) {
             return response()->json(['error' => 'proses gagal, periksa kembali koneksi anda'], 500);
         }
