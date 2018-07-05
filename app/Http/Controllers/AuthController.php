@@ -122,7 +122,7 @@ class AuthController extends Controller
             ])
             ->toArray();
         }
-        return response()->json(['email' => $user->email, 'token' => $token,'error' => 'silahkan, masukan kode user anda'], 401);
+        return response()->json(['email' => $user->email, 'token' => $token,'error' => 'silahkan, masukan kode user anda'], 403);
 
     }
 
