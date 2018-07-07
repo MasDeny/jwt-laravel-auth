@@ -21,12 +21,15 @@ Route::group(['prefix' => 'v1'], function() {
 
 Route::group(['prefix' => 'account'], function() {
     Route::post('register', 'AuthController@register');
+    Route::post('send_code', 'AuthController@send_code');
     Route::post('login', 'AuthController@login');
     Route::post('reset', 'AuthController@reset_password');
+    Route::post('send_reset', 'AuthController@send_reset');
     Route::put('change', 'AuthController@change')->middleware('jwt.auth');
     Route::post('confirm_code', 'AuthController@confirm_code')->middleware('jwt.auth');
     Route::post('confirm_reset', 'AuthController@reset_confirm');
 });
+
 Route::group(['prefix' => 'profile'], function() {
     Route::post('create', 'ProfileController@create');
     Route::put('edit','ProfileController@update_profile');
@@ -34,4 +37,9 @@ Route::group(['prefix' => 'profile'], function() {
     Route::get('show', 'ProfileController@show');
 });
 
+Route::group(['prefix' => 'maps'], function() {
+    Route::post('create', 'LocationController@create');
+    Route::put('edit','LocationController@update');
+    Route::get('show', 'LocationController@show');
+});
 });
