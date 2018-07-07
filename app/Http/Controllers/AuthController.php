@@ -16,6 +16,10 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
+    public function __construct()
+    {
+        $this->user = JWTAuth::parseToken()->authenticate();
+    }
 
     //Fungsi untuk mendaftar pada aplikasi
     public function register(Request $request)
@@ -40,15 +44,15 @@ class AuthController extends Controller
     	]);
 
     	$token = JWTAuth::fromUser($user);
-        $phone = $request->get('phone');
-        $email = $request->get('email');
-        $username = $request->get('username');
-        $this->send_code($email, $key_code, $phone, $username);
     	return response()->json(['token_type' => 'Bearer ', 'token' => $token, 'success' => 'kode OTP terkirim'], 201);
     }
 
-    public function send_code($email, $key_code, $phone, $username)
+    public function send_code()
     {
+        $email = $this->user->email;
+        $key_code = $this->user->code;
+        $phone = $this->user->phone;
+        $username = $this->user->username;
         try {
         if ( !empty ( $phone ) ) {
             $sms = new Sms('hm0opd', 'Onfood');
@@ -168,19 +172,19 @@ class AuthController extends Controller
             'email'       => 'required',
         ]);
         $email = $request->email;
-        $new_password = $request->new_password;
         $email_validate = !!User::where('email', $email)->first();
         if (!$email_validate) {
             return response()->json(['error' => 'Kami tidak dapat menemukan akun dengan email '.$email], 404);
         } else {
-            $key_code = Keygen::numeric(5)->generate();
-            $this->send_reset($email, $key_code);
-            return response()->json(['success' => 'Reset password terkirim, silahkan cek email anda']);
+            $this->send_reset($email);
+            return response()->json(['email' => $user->email, 'success' => 'Reset password terkirim, silahkan cek email anda']);
         }
     }
 
-    public function send_reset($email, $key_code)
+    public function send_reset()
     {
+        $key_code = Keygen::numeric(5)->generate();
+        $email = $request->email;
         try {
         Mail::send('emails.reset', ['key_code' => $key_code], function ($message) use($email)
         {

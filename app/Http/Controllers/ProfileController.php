@@ -73,7 +73,7 @@ class ProfileController extends Controller
             ->addMeta(['success'  => 'Profil pembeli telah dibuat'], 201)
             ->toArray();
         }
-        return response()->json(['error' => 'Pembuatan profil gagal, akun anda telah memiliki profil'], 409);
+        return response()->json(['error' => 'Pembuatan profil gagal, akun anda telah memiliki profil'], 202);
         } catch (JWTException $e) {
             return response()->json(['error' => 'Pembuatan profil gagal, periksa kembali koneksi anda'], 500);
         }
@@ -155,6 +155,9 @@ class ProfileController extends Controller
     {
         $shop = $this->user->shop;
         $profile = $this->user->profile;
+        if ($this->user->status_user == 0) {
+            return response()->json(['error' => 'Tidak ditemukan, silahkan isi profile anda'], 404);
+        }
         try {
         $status = $this->user->status;
         if ($status === 'seller')
