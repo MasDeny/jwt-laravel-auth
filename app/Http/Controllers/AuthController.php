@@ -16,11 +16,6 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
-    public function __construct()
-    {
-        $this->user = JWTAuth::parseToken()->authenticate();
-    }
-
     //Fungsi untuk mendaftar pada aplikasi
     public function register(Request $request)
     {
@@ -49,6 +44,7 @@ class AuthController extends Controller
 
     public function send_code()
     {
+        $this->user = JWTAuth::parseToken()->authenticate();
         $email = $this->user->email;
         $key_code = $this->user->code;
         $phone = $this->user->phone;

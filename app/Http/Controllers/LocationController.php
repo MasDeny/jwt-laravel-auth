@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Location;
+use App\Transformers\MapsTransformer;
+use Illuminate\Http\Request;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
+class LocationController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('jwt.auth');
+        $this->user = JWTAuth::parseToken()->authenticate();
+    }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Request $request)
+    {
+        if (empty($this->user->shop->id)) {
+            return response()->json(['error' => 'Anda tidak diijinkan untuk mengakses ini'], 403);
+        }
+        $user_stat = $this->user->status_user;
+        try {
+            if ($user_stat == 2) {
+            $this->validate($request, [
+            'place'     => 'min:3',
+            'latitude'  => 'required|min:3',
+            'longitude' => 'required|min:11',
+            ]);
+
+            $maps = Location::create([
+            'name_location' => request('place'),
+            'lat'           => request('latitude'),
+            'long'          => request('longitude'),
+            'shop_id'       => $this->user->shop->id,
+            ]);
+
+            return fractal()
+            ->item($maps)
+            ->transformWith(new MapsTransformer)
+            ->addMeta(['success'  => 'Lokasi telah ditentukan'])
+            ->toArray();
+        }
+        return response()->json(['error' => 'Penentuan Lokasi gagal, silahkan buat profil terlebih dahulu'], 202);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Pembuatan profil gagal, periksa kembali koneksi anda'], 500);
+        }
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request)
+    {
+        $location = $this->user->shop->location;
+        $data = [
+            'name_location' => request('place'),
+            'lat'           => request('latitude'),
+            'long'          => request('longitude'),
+            ];
+
+        $location->where('shop_id', $this->user->shop->id)->update($data);
+        $location = $this->user->shop->location;
+        return fractal()
+            ->item($location)
+            ->transformWith(new MapsTransformer)
+            ->addMeta(['success'  => 'Lokasi telah diperbaharui'])
+            ->toArray();
+    }
+}
