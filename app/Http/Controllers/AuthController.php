@@ -177,7 +177,7 @@ class AuthController extends Controller
         }
     }
 
-    public function send_reset()
+    public function send_reset(Request $request)
     {
         $key_code = Keygen::numeric(5)->generate();
         $email = $request->email;
