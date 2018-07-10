@@ -335,12 +335,12 @@
         <table cellspacing="0" cellpadding="0" width="600" class="w320">
           <tr>
             <td class="header-lg">
-              Pemberitahuan Reset Password !
+              Pemberitahuan kode aktivasi !
             </td>
           </tr>
           <tr>
             <td class="free-text">
-              Anda menerima email ini dikarenakan ada permohonan lupa password pada akun on-food anda. Jika anda tidak merasa melakukan permohonan tersebut, abaikan saja email berikut.
+              Anda menerima email ini dikarenakan ada permohonan lupa password atau mengirim ulang kode konfirmasi pada akun on-food anda. Jika anda tidak merasa melakukan permohonan tersebut, abaikan saja email berikut.
 
               Terima kasih telah menggunakan aplikasi On-food ! Semoga anda nyaman menggunakannya.
             </td>
@@ -353,7 +353,7 @@
                     <table cellpadding="0" cellspacing="0" width="100%">
                       <tr>
                         <td style="padding-bottom: 20px;">
-                          Berikut kode konfirmasi untuk reset password pada aplikasi On-food.
+                          Berikut kode konfirmasi untuk digunakan pada aplikasi On-food.
                         </td>
                       </tr>
                       <tr>

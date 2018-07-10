@@ -58,9 +58,13 @@ class LocationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Location $location, $id)
     {
-
+        $maps = $location->find($id);
+        return fractal()
+            ->item($maps)
+            ->transformWith(new MapsTransformer)
+            ->toArray();
     }
 
     /**

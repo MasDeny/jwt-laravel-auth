@@ -40,6 +40,6 @@ Route::group(['prefix' => 'profile'], function() {
 Route::group(['prefix' => 'maps'], function() {
     Route::post('create', 'LocationController@create');
     Route::put('edit','LocationController@update');
-    Route::get('show', 'LocationController@show');
+    Route::get('show/{id}', 'LocationController@show');
 });
 });
