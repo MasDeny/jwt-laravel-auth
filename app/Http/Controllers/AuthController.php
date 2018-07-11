@@ -44,11 +44,11 @@ class AuthController extends Controller
 
     public function send_code()
     {
-        $this->user = JWTAuth::parseToken()->authenticate();
-        $email = $this->user->email;
-        $key_code = $this->user->code;
-        $phone = $this->user->phone;
-        $username = $this->user->username;
+        $user = JWTAuth::parseToken()->authenticate();
+        $email = $user->email;
+        $key_code = $user->code;
+        $phone = $user->phone;
+        $username = $user->username;
         try {
         if ( !empty ( $phone ) ) {
             $sms = new Sms('hm0opd', 'Onfood');
@@ -111,7 +111,7 @@ class AuthController extends Controller
     		return response()->json(['error' => 'login gagal, periksa kembali koneksi anda'], 500);
     	}
         $user = JWTAuth::toUser($token);
-        if ($user->status_user == 1) {
+        if ($user->status_user > 0) {
     	return fractal()
             ->item($user)
             ->transformWith(new UserTransformer)

@@ -12,8 +12,8 @@ class LocationController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt.auth');
-        $this->user = JWTAuth::parseToken()->authenticate();
+        $this->middleware('jwt.auth', 
+            ['except' => ['show']]);
     }
     /**
      * Show the form for creating a new resource.
@@ -22,6 +22,7 @@ class LocationController extends Controller
      */
     public function create(Request $request)
     {
+        $this->user = JWTAuth::parseToken()->authenticate();
         if (empty($this->user->shop->id)) {
             return response()->json(['error' => 'Anda tidak diijinkan untuk mengakses ini'], 403);
         }
@@ -76,6 +77,7 @@ class LocationController extends Controller
      */
     public function update(Request $request)
     {
+        $this->user = JWTAuth::parseToken()->authenticate();
         $location = $this->user->shop->location;
         $data = [
             'name_location' => request('place'),

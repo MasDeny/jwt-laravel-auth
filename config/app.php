@@ -188,6 +188,9 @@ return [
         //Nexmo\Laravel\NexmoServiceProvider::class,
 
         Nasution\ZenzivaSms\NotificationServiceProvider::class,
+
+        //pagination api laravel
+        Spatie\JsonApiPaginate\JsonApiPaginateServiceProvider::class,
     ],
 
     /*

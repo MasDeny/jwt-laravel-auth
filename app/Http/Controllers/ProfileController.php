@@ -16,13 +16,23 @@ class ProfileController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt.auth');
-        $this->user = JWTAuth::parseToken()->authenticate();
+        $this->middleware('jwt.auth', 
+            ['except' => ['index']]);
     }
 
     //menambahkan fungsi untuk membuat profile
+    public function index(Shop $shop, $id)
+    {
+         $shop = $shop->find($id);
+         return fractal()
+            ->item($shop)
+            ->transformWith(new SellerTransformer)
+            ->toArray();
+    }
+
     public function create(Request $request)
     {
+        $this->user = JWTAuth::parseToken()->authenticate();
         $status = $this->user->status;
         $user_stat = $this->user->status_user;
         try {
@@ -81,6 +91,7 @@ class ProfileController extends Controller
 
     public function update_profile(Request $request)
     {
+        $this->user = JWTAuth::parseToken()->authenticate();
         $status = $this->user->status;
         if ($status === 'seller')
         {
@@ -120,6 +131,7 @@ class ProfileController extends Controller
 
     public function update_avatar(Request $request)
     {
+        $this->user = JWTAuth::parseToken()->authenticate();
         try {
         $this->validate($request,[
            'avatar'=>'required|mimes:jpeg,bmp,jpg,png,svg|between:1, 2048',
@@ -153,6 +165,7 @@ class ProfileController extends Controller
 
     public function show(Shop $shop, Profile $profile)
     {
+        $this->user = JWTAuth::parseToken()->authenticate();
         $shop = $this->user->shop;
         $profile = $this->user->profile;
         if ($this->user->status_user == 0) {
