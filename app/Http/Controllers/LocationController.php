@@ -32,7 +32,7 @@ class LocationController extends Controller
             $this->validate($request, [
             'place'     => 'min:3',
             'latitude'  => 'required|min:3',
-            'longitude' => 'required|min:11',
+            'longitude' => 'required|min:9',
             ]);
 
             $maps = Location::create([
@@ -59,9 +59,9 @@ class LocationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Location $location, $id)
+    public function show($id)
     {
-        $maps = $location->find($id);
+        $maps = Location::findOrFail($id);
         return fractal()
             ->item($maps)
             ->transformWith(new MapsTransformer)
