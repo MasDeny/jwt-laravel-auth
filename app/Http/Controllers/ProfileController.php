@@ -27,6 +27,8 @@ class ProfileController extends Controller
          return fractal()
             ->item($shop)
             ->transformWith(new SellerTransformer)
+            ->includeProducts()
+            ->includeMap()
             ->toArray();
     }
 
