@@ -36,6 +36,7 @@ Route::group(['prefix' => 'profile'], function() {
     Route::post('avatar','ProfileController@update_avatar');
     Route::get('show', 'ProfileController@show');
     Route::get('{id}', 'ProfileController@index')->name('profile.index');
+    Route::get('{id}/products', 'ProductController@index')->name('profile.products');
 });
 
 Route::group(['prefix' => 'maps'], function() {
@@ -45,6 +46,14 @@ Route::group(['prefix' => 'maps'], function() {
 });
 
 Route::group(['prefix' => 'products'], function() {
+    Route::post('create', 'ProductController@create');
+    Route::put('edit/{id}','ProductController@update')->name('product.edit');
+    Route::delete('delete/{id}', 'ProductController@destroy')->name('product.delete');
+    Route::get('show', 'ProductController@show');
+    Route::get('show/{id}', 'ProductController@show_by_id');
+});
+
+Route::group(['prefix' => 'review'], function() {
     Route::post('create', 'ProductController@create');
     Route::put('edit/{id}','ProductController@update')->name('product.edit');
     Route::delete('delete/{id}', 'ProductController@destroy')->name('product.delete');

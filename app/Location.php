@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Shop;
 use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model

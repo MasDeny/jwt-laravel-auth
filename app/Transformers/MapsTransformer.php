@@ -3,7 +3,7 @@
 namespace App\Transformers;
 
 use App\Location;
-use App\Transformers\SellerTransformer;
+use App\Transformers\Action\MapTransformer;
 use League\Fractal\TransformerAbstract;
 
 class MapsTransformer extends TransformerAbstract
@@ -13,6 +13,9 @@ class MapsTransformer extends TransformerAbstract
      *
      * @return array
      */
+    protected $availableIncludes = [
+        'detail',
+    ];
 
     public function transform(Location $location)
     {
@@ -20,12 +23,11 @@ class MapsTransformer extends TransformerAbstract
             'places'    => $location->name_location,
             'latitude'  => $location->lat,
             'longitude' => $location->long,
-            'shop'      => [
-                'name'      => $location->shop->shop_name,
-                'owner'     => $location->shop->owner,
-                'address'   => $location->shop->address,
-                'more'      => route('profile.index',$location->shop_id)
-            ],
         ];
+    }
+
+    public function includeDetail(Location $location)
+    {
+        return $this->item($location, new MapTransformer);
     }
 }

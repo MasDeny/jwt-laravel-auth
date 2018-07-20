@@ -26,6 +26,9 @@ class LocationController extends Controller
         if (empty($this->user->shop->id)) {
             return response()->json(['error' => 'Anda tidak diijinkan untuk mengakses ini'], 403);
         }
+        if ($this->user->shop->location->count() > 1) {
+            return response()->json(['error' => 'Anda tidak diijinkan untuk menambahkan lokasi lebih dari 1'], 409);
+        }
         $user_stat = $this->user->status_user;
         try {
             if ($user_stat == 2) {
@@ -65,6 +68,7 @@ class LocationController extends Controller
         return fractal()
             ->item($maps)
             ->transformWith(new MapsTransformer)
+            ->includeDetail()
             ->toArray();
     }
 

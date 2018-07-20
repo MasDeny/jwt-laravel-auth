@@ -33,7 +33,7 @@ class Shop extends Model
     }
     public function review()
     {
-
+        return $this->hasMany(Review::class);
     }
     public function location()
     {

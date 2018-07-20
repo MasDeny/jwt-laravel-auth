@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Image;
 
 class ProfileController extends Controller
 {
@@ -27,7 +28,6 @@ class ProfileController extends Controller
          return fractal()
             ->item($shop)
             ->transformWith(new SellerTransformer)
-            ->includeProducts()
             ->includeMap()
             ->toArray();
     }
@@ -136,12 +136,16 @@ class ProfileController extends Controller
         $this->user = JWTAuth::parseToken()->authenticate();
         try {
         $this->validate($request,[
-           'avatar'=>'required|mimes:jpeg,bmp,jpg,png,svg|between:1, 2048',
+           'avatar'=>'required|mimes:jpeg,jpg,png|max:500000',
        ]);
         $status = $this->user->status;
         if ($request->hasFile('avatar')) {
-        $imagename = $request->avatar->getClientOriginalName();
-        $request->avatar->move(public_path("avatars"), $imagename);
+        $imagename = 'avatar'. '_' . $status . '_' . preg_replace('/\s+/','_',$request->avatar->getClientOriginalName());
+        $img = Image::make($request->avatar->move(public_path("avatars"), $imagename));
+        $img->fit(500, 500, function ($constraint) {
+            $constraint->upsize();
+        });
+        $img->save();
             if ($status === 'seller')
             {
                 $default = $this->user->shop->avatar;

@@ -29,6 +29,7 @@ class SellerTransformer extends TransformerAbstract
             'address'       => $shop->address,
             'description'   => $shop->description,
             'avatar'        => url('/').'/avatars/'.$shop->avatar,
+            'products'      => route('profile.products',$shop->id),
             'created at'    => $shop->created_at->diffForHumans(),
         ];
     }

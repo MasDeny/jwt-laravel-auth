@@ -191,6 +191,9 @@ return [
 
         //pagination api laravel
         Spatie\JsonApiPaginate\JsonApiPaginateServiceProvider::class,
+
+        //image processing laravel
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -250,6 +253,9 @@ return [
         'Keygen' => Keygen\Keygen::class,
         //mengirim kode konfirmasi melalui sms
         //'Nexmo' => Nexmo\Laravel\Facade\Nexmo::class,
+
+        //menambahkan image intervertion
+        'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

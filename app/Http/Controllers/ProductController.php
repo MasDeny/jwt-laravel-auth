@@ -14,16 +14,21 @@ class ProductController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.auth', 
-            ['except' => ['show_by_id']]);
+            ['except' => ['show_by_id', 'index']]);
     }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        //
+        $products = Products::where('shop_id',$id)->get();
+        return fractal()
+            ->collection($products)
+            ->transformWith(new ProductsTransformer)
+            ->addMeta(['success'  => 'Berikut Produk pada toko ini'])
+            ->toArray();   
     }
 
     /**
