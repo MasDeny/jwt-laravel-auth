@@ -190,7 +190,7 @@ return [
         Nasution\ZenzivaSms\NotificationServiceProvider::class,
 
         //pagination api laravel
-        Spatie\JsonApiPaginate\JsonApiPaginateServiceProvider::class,
+        //Spatie\JsonApiPaginate\JsonApiPaginateServiceProvider::class,
 
         //image processing laravel
         Intervention\Image\ImageServiceProvider::class,
