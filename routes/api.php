@@ -43,6 +43,7 @@ Route::group(['prefix' => 'maps'], function() {
     Route::post('create', 'LocationController@create');
     Route::put('edit','LocationController@update');
     Route::get('show/{id}', 'LocationController@show');
+    Route::get('show', 'LocationController@index');
 });
 
 Route::group(['prefix' => 'products'], function() {
@@ -54,11 +55,9 @@ Route::group(['prefix' => 'products'], function() {
 });
 
 Route::group(['prefix' => 'review'], function() {
-    Route::post('create', 'ProductController@create');
-    Route::put('edit/{id}','ProductController@update')->name('product.edit');
-    Route::delete('delete/{id}', 'ProductController@destroy')->name('product.delete');
-    Route::get('show', 'ProductController@show');
-    Route::get('show/{id}', 'ProductController@show_by_id');
-
+    Route::post('{id}/create', 'ReviewController@create')->name('review.create');
+    Route::post('{id}/edit','ReviewController@update')->name('review.edit');
+    Route::get('{id}/show', 'ReviewController@show')->name('review.show');
+    Route::get('show', 'ReviewController@index');
 });
 });

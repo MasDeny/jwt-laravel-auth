@@ -13,8 +13,24 @@ class LocationController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.auth', 
-            ['except' => ['show']]);
+            ['except' => ['show','index']]);
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $maps = Location::get();
+        return fractal()
+            ->collection($maps)
+            ->transformWith(new MapsTransformer)
+            ->includeDetail()
+            ->toArray();
+    }
+
     /**
      * Show the form for creating a new resource.
      *

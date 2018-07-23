@@ -29,6 +29,7 @@ class ProfileController extends Controller
             ->item($shop)
             ->transformWith(new SellerTransformer)
             ->includeMap()
+            ->includeReview()
             ->toArray();
     }
 
@@ -142,10 +143,14 @@ class ProfileController extends Controller
         if ($request->hasFile('avatar')) {
         $imagename = 'avatar'. '_' . $status . '_' . preg_replace('/\s+/','_',$request->avatar->getClientOriginalName());
         $img = Image::make($request->avatar->move(public_path("avatars"), $imagename));
-        $img->fit(500, 500, function ($constraint) {
-            $constraint->upsize();
+        $img->resize(800, null, function ($constraint) {
+             $constraint->aspectRatio();
+             $constraint->upsize();
         });
         $img->save();
+        if (file_exists(base_path() . '/public/avatars/' . $imagename) == false) {
+            return response()->json(['error'  => 'Foto tidak ditemukan'], 404);   
+        }
             if ($status === 'seller')
             {
                 $default = $this->user->shop->avatar;

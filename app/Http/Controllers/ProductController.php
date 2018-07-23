@@ -66,7 +66,7 @@ class ProductController extends Controller
         }
         return response()->json(['error' => 'Pembuatan produk gagal, silahkan buat profil terlebih dahulu'], 202);
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Penambahan profil gagal, periksa kembali koneksi anda'], 500);
+            return response()->json(['error' => 'Penambahan produk gagal, periksa kembali koneksi anda'], 500);
         }
     }
 

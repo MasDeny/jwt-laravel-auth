@@ -2,11 +2,13 @@
 
 namespace App;
 
+use App\Profile;
 use App\Shop;
 use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
 {
+	public $timestamps = false;
 	/**
      * The attributes that are mass assignable.
      *
@@ -24,5 +26,10 @@ class Review extends Model
     public function shop()
     {
         return $this->belongsTo(Shop::class);
+    }
+
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class);
     }
 }
