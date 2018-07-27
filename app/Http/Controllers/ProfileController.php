@@ -25,6 +25,14 @@ class ProfileController extends Controller
     public function index(Shop $shop, $id)
     {
          $shop = $shop->find($id);
+         if (empty($shop->location)) {
+            return fractal()
+            ->item($shop)
+            ->transformWith(new SellerTransformer)
+            ->addMeta(['maps'  => 'Toko ini tidak belum menentukan lokasi'])
+            ->includeReview()
+            ->toArray();
+        }
          return fractal()
             ->item($shop)
             ->transformWith(new SellerTransformer)

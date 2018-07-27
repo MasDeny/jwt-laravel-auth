@@ -88,19 +88,24 @@ class ReviewController extends Controller
     public function update(Request $request, $id)
     {
         $user = JWTAuth::parseToken()->authenticate();
+        if ($user->profile->review->where('shop_id',$id)->count() > 0) {
+            return response()->json(['error' => 'Anda tidak memiliki review pada toko ini'], 406);
+        }
+        $this->validate($request, [
+            'rating'    => 'required',
+        ]);
         $data = [
-            'product_name'  => request('name'),
-            'product_type'  => request('type'),
-            'price'         => request('price'),
+            'comment'       => request('comment'),
+            'rating'        => request('rating'),
+            'profile_id'    => $user->profile->id,
             ];
-        DB::table('products')->where('id', $id)->update($data);
-        $products = $user->shop->products;
-        $product = $products->where('id', $id);
-
+        DB::table('reviews')->where('profile_id', $user->profile->id)->where('shop_id', $id)->update($data);
+        $review = $user->profile->review;
+        $reviews = $review->where('profile_id', $user->profile->id);
         return fractal()
-            ->collection($product)
-            ->transformWith(new ProductsTransformer)
-            ->addMeta(['success'  => 'Produk telah diperbaharui'])
+            ->collection($reviews)
+            ->transformWith(new ReviewTransformer)
+            ->addMeta(['success'  => 'Review pada toko telah diperbaharui'])
             ->toArray();
     }
 }

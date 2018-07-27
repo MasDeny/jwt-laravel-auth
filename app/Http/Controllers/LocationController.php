@@ -42,7 +42,7 @@ class LocationController extends Controller
         if (empty($this->user->shop->id)) {
             return response()->json(['error' => 'Anda tidak diijinkan untuk mengakses ini'], 403);
         }
-        if ($this->user->shop->location->count() > 1) {
+        if (!empty($this->user->shop->location) and $this->user->shop->location->count() > 0) {
             return response()->json(['error' => 'Anda tidak diijinkan untuk menambahkan lokasi lebih dari 1'], 409);
         }
         $user_stat = $this->user->status_user;
