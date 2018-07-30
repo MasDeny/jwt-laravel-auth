@@ -68,7 +68,8 @@ Route::group(['prefix' => 'search'], function() {
     Route::post('product','SearchController@byProduct');
     Route::get('rating','SearchController@byRating');
     Route::post('shop','SearchController@byShop');
-    Route::get('newest','SearchController@byNewest');
+    Route::get('new/shop','SearchController@byNewestShop');
+    Route::get('new/product','SearchController@byNewestProduct');
 
 });
 

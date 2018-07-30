@@ -52,7 +52,7 @@ class SearchController extends Controller
 
     public function byCategorydrink()
     {
-    	$products = Products::where('product_type', 'drink')->orderBy('product_name', 'asc')->get();
+    	$products = Products::where('product_type','drink')->orderBy('product_name', 'asc')->get();
 
     	if (json_decode($products) == []) {
     		return response()->json(['success' => 'yahh , ga ada nih yang kamu cari']);
@@ -125,8 +125,25 @@ class SearchController extends Controller
     	
     }
 
-    public function byNewest()
+    public function byNewestShop()
     {
+    	$shop = Shop::orderBy('created_at', 'asc')->paginate(5)->chunk(100);
+    	
+    	return fractal()
+            ->collection($shop)
+            ->transformWith(new ShopTransformer)
+            ->toArray();
+    	
+    }
+
+    public function byNewestProduct()
+    {
+    	$products = Products::orderBy('created_at', 'asc')->paginate(5);
+    	
+    	return fractal()
+            ->collection($products)
+            ->transformWith(new ProductsTransformer)
+            ->toArray();
     	
     }
 }
