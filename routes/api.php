@@ -51,13 +51,25 @@ Route::group(['prefix' => 'products'], function() {
     Route::put('edit/{id}','ProductController@update')->name('product.edit');
     Route::delete('delete/{id}', 'ProductController@destroy')->name('product.delete');
     Route::get('show', 'ProductController@show');
-    Route::get('show/{id}', 'ProductController@show_by_id');
+    Route::get('show/{id}', 'ProductController@show_by_id')->name('product.show');
 });
 
 Route::group(['prefix' => 'review'], function() {
     Route::post('{id}/create', 'ReviewController@create')->name('review.create');
     Route::post('{id}/edit','ReviewController@update')->name('review.edit');
     Route::get('{id}/show', 'ReviewController@show')->name('review.show');
-    Route::get('show', 'ReviewController@index');
 });
+
+Route::group(['prefix' => 'search'], function() {
+    Route::get('category/food', 'SearchController@byCategoryfood');
+    Route::get('category/drink', 'SearchController@byCategorydrink');
+    Route::get('price/cheap','SearchController@byPriceCheap');
+    Route::get('price/expensive','SearchController@byPriceExpensive');
+    Route::post('product','SearchController@byProduct');
+    Route::get('rating','SearchController@byRating');
+    Route::post('shop','SearchController@byShop');
+    Route::get('newest','SearchController@byNewest');
+
+});
+
 });

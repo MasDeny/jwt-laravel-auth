@@ -21,8 +21,8 @@ class CreateReviewsTable extends Migration
             $table->integer('shop_id')->unsigned();
             $table->timestamps();
 
-            $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
-            $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
+            $table->foreign('profile_id')->references('id')->on('profiles');
+            $table->foreign('shop_id')->references('id')->on('shops');
         });
     }
 
