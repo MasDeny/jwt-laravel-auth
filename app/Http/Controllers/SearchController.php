@@ -127,7 +127,7 @@ class SearchController extends Controller
 
     public function byNewestShop()
     {
-    	$shop = Shop::orderBy('created_at', 'asc')->paginate(5)->chunk(100);
+    	$shop = Shop::orderBy('created_at', 'asc')->paginate(5);
     	
     	return fractal()
             ->collection($shop)

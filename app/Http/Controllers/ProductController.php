@@ -89,6 +89,14 @@ class ProductController extends Controller
     public function show_by_id($id)
     {
         $product = Products::findOrFail($id);
+        if ($product->products_photos === null) {
+            return fractal()
+            ->item($product)
+            ->transformWith(new ProductsTransformer)
+            ->includeShop()
+            ->addMeta(['success' => 'Tidak memiliki foto produk'])
+            ->toArray();
+        }
         return fractal()
             ->item($product)
             ->transformWith(new ProductsTransformer)

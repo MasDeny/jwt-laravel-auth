@@ -28,6 +28,7 @@ class ProductsTransformer extends TransformerAbstract
             'product_name'  => $products->product_name,
             'product_type'  => $products->product_type,
             'price'         => $products->price,
+            'detail'        => route('product.show',$products->id)
         ];
     }
 
