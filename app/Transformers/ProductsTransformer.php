@@ -3,8 +3,9 @@
 namespace App\Transformers;
 
 use App\Products;
-use App\Transformers\SellerTransformer;
 use App\Transformers\Action\ProductTransformer;
+use App\Transformers\PhotosTransformer;
+use App\Transformers\SellerTransformer;
 use League\Fractal\TransformerAbstract;
 
 class ProductsTransformer extends TransformerAbstract
@@ -18,6 +19,7 @@ class ProductsTransformer extends TransformerAbstract
     protected $availableIncludes = [
         'shop',
         'action',
+        'photos',
     ];
 
     public function transform(Products $products)
@@ -32,6 +34,12 @@ class ProductsTransformer extends TransformerAbstract
     public function includeAction(Products $products)
     {
         return $this->item($products, new ProductTransformer);
+    }
+
+    public function includePhotos(Products $products)
+    {
+        $photos = $products->products_photos->get();
+        return $this->collection($photos, new PhotosTransformer);
     }
 
     public function includeShop(Products $products)

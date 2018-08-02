@@ -168,7 +168,7 @@ class ProfileController extends Controller
                 $table = 'profiles';
             }
             if ($default !== "default.jpg") {
-                Storage::delete($default);
+                Storage::delete('/avatars/'.$default);
             }
             DB::table($table)
             ->where('user_id', $this->user->id)

@@ -2,11 +2,12 @@
 
 namespace App\Transformers\Search;
 
-use League\Fractal\TransformerAbstract;
 use App\Products;
+use League\Fractal\TransformerAbstract;
 
 class ProductsTransformer extends TransformerAbstract
 {
+
     /**
      * A Fractal transformer.
      *
@@ -17,6 +18,7 @@ class ProductsTransformer extends TransformerAbstract
     {
         return [
             'shop_name'     => $products->shop->shop_name,
+            'photo product' => url('/').'/products/'.$products->products_photos->filename,
             'product_name'  => $products->product_name,
             'product_type'  => $products->product_type,
             'price'         => $products->price,

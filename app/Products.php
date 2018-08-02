@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Products_photos;
 use App\Shop;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,6 +29,6 @@ class Products extends Model
 
     public function products_photos()
     {
-    	return $this->hasOne(Location::class);
+    	return $this->hasOne(Products_photos::class);
     }
 }

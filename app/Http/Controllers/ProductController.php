@@ -43,6 +43,9 @@ class ProductController extends Controller
             return response()->json(['error' => 'Anda tidak diijinkan untuk mengakses ini'], 403);
         }
         $user_stat = $user->status_user;
+        if (!empty($this->user->shop->products) and $this->user->shop->products->count() > 9) {
+                return response()->json(['success' => 'Batas menambahkan produk hanya 10']);
+            }
         try {
             if ($user_stat == 2) {
             $this->validate($request, [
@@ -90,6 +93,7 @@ class ProductController extends Controller
             ->item($product)
             ->transformWith(new ProductsTransformer)
             ->includeShop()
+            ->includePhotos()
             ->toArray();
     }
     /**
@@ -102,6 +106,9 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $user = JWTAuth::parseToken()->authenticate();
+        if ($user->shop->products->find($id) === null) {
+            return response()->json(['error' => 'Produk yang anda akses bukan milik anda'], 403);
+        }
         $data = [
             'product_name'  => request('name'),
             'product_type'  => request('type'),
@@ -109,10 +116,9 @@ class ProductController extends Controller
             ];
         DB::table('products')->where('id', $id)->update($data);
         $products = $user->shop->products;
-        $product = $products->where('id', $id);
 
         return fractal()
-            ->collection($product)
+            ->collection($products)
             ->transformWith(new ProductsTransformer)
             ->addMeta(['success'  => 'Produk telah diperbaharui'])
             ->toArray();
@@ -130,6 +136,9 @@ class ProductController extends Controller
         $products = $user->shop->products;
 
         $product = Products::findOrFail($id);
+        if ($user->shop->products->find($id) === null) {
+            return response()->json(['error' => 'Produk yang anda akses bukan milik anda'], 403);
+        }
         
         $product->delete();
         

@@ -17,6 +17,8 @@ class ProductTransformer extends TransformerAbstract
         return [
             'edited'        => route('product.edit',$products->id), 
             'deleted'       => route('product.delete',$products->id),
+
+            'add photos'    => route('photos.create',$products->id),
         ];
     }
 }

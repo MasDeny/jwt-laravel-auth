@@ -18,10 +18,10 @@ class CreateProductsPhotosTable extends Migration
             $table->string('filename');
             $table->string('mime');
             $table->string('original_filename');
-            $table->integer('product_id')->unsigned();
+            $table->integer('products_id')->unsigned();
             $table->timestamps();
 
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('products_id')->references('id')->on('products');
         });
     }
 

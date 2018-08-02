@@ -73,4 +73,12 @@ Route::group(['prefix' => 'search'], function() {
 
 });
 
+Route::group(['prefix' => 'photos'], function() {
+        Route::post('product/{id}/add', 'PhotosController@create')->name('photos.create');
+        Route::get('product/{id}/show', 'PhotosController@index')->name('photos.index');
+        Route::get('{id}/show', 'PhotosController@show')->name('photos.show');
+        Route::post('{id}/edit', 'PhotosController@update')->name('photos.edit');
+        Route::delete('{id}/delete', 'PhotosController@destroy')->name('photos.delete');
+});
+
 });

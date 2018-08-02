@@ -194,6 +194,9 @@ return [
 
         //image processing laravel
         Intervention\Image\ImageServiceProvider::class,
+
+        //upload cloudinary
+        JD\Cloudder\CloudderServiceProvider::class,
     ],
 
     /*
@@ -251,11 +254,16 @@ return [
 
         //menambahkan random number
         'Keygen' => Keygen\Keygen::class,
+
         //mengirim kode konfirmasi melalui sms
         //'Nexmo' => Nexmo\Laravel\Facade\Nexmo::class,
 
         //menambahkan image intervertion
         'Image' => Intervention\Image\Facades\Image::class,
+
+        //cloud image cloudder
+
+        'Cloudder' => JD\Cloudder\Facades\Cloudder::class,
 
     ],
 
