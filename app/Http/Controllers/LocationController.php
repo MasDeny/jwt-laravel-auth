@@ -13,7 +13,7 @@ class LocationController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.auth', 
-            ['except' => ['show','index']]);
+            ['except' => ['show','index','warung_markers']]);
     }
 
     /**
@@ -88,6 +88,24 @@ class LocationController extends Controller
             ->toArray();
     }
 
+    function Warung_Markers(){
+        $data = [];
+        foreach (Location::get() as $key => $v) {
+            $data[] = [
+                'places'    => $v->name_location,
+                'latitude'  => $v->lat,
+                'longitude' => $v->long,
+                'shop'      => [
+                    'name'      => $v->shop->shop_name,
+                    'owner'     => $v->shop->owner,
+                    'address'   => $v->shop->address,
+                    'more'      => route('profile.index',$v->shop_id)
+                ],
+            ];
+        }
+        return json_encode(['data'=>$data]);
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -112,5 +130,19 @@ class LocationController extends Controller
             ->transformWith(new MapsTransformer)
             ->addMeta(['success'  => 'Lokasi telah diperbaharui'])
             ->toArray();
+    }
+
+    function myLocation(){
+        try {
+            $this->user = JWTAuth::toUser(request('token'));
+            return fractal()
+                ->item($this->user->shop->location)
+                ->transformWith(new MapsTransformer)
+                ->addMeta(['success'  => 'Lokasi telah diperbaharui'])
+                ->toArray();
+        } catch (Exception $e) {
+            $e->getMessage();
+            echo "string";
+        }
     }
 }

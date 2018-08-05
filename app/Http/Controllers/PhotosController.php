@@ -65,12 +65,11 @@ class PhotosController extends Controller
                 if ($request->hasFile('upload')) {
                 $shop = $user->shop->shop_name;
 
-                $imagename = 'Product'.'_'.time().'_'.$shop.'_'. preg_replace('/\s+/','_',$request->upload->getClientOriginalName());
+                $imagename = preg_replace('/\s+/','_',$shop.'/Product'.'_'.time().'_'.$shop.'_'.$request->upload->getClientOriginalName());
 
-                $path = $request->upload->storeAs(preg_replace('/\s+/','','products/'.$shop),$imagename);
                 $mime = $request->file('upload')->getMimeType();
 
-                $img = Image::make($request->upload->move(public_path(preg_replace('/\s+/','',"products/$shop")), $path));
+                $img = Image::make($request->upload->move(public_path(preg_replace('/\s+/','_',"products/$shop")), $imagename));
 
                 $img->resize(800, null, function ($constraint) {
                      $constraint->aspectRatio();
@@ -78,7 +77,7 @@ class PhotosController extends Controller
                 });
                 $img->save();
                 $photos = Products_photos::create([
-                    'filename'          => $path,
+                    'filename'          => $imagename,
                     'mime'              => $mime,
                     'original_filename' => $request->upload->getClientOriginalName(),
                     'products_id'        => $id,
@@ -150,12 +149,11 @@ class PhotosController extends Controller
         if ($request->hasFile('upload')) {
             $shop = $user->shop->shop_name;
 
-            $imagename = 'Product'.'_'.time().'_'.$shop.'_'. preg_replace('/\s+/','_',$request->upload->getClientOriginalName());
+            $imagename = preg_replace('/\s+/','_',$shop.'/Product'.'_'.time().'_'.$shop.'_'.$request->upload->getClientOriginalName());
 
-                $path = $request->upload->storeAs(preg_replace('/\s+/','','products/'.$shop),$imagename);
                 $mime = $request->file('upload')->getMimeType();
 
-                $img = Image::make($request->upload->move(public_path(preg_replace('/\s+/','',"products/$shop")), $path));
+                $img = Image::make($request->upload->move(public_path(preg_replace('/\s+/','_',"products/$shop")), $imagename));
 
                 $img->resize(800, null, function ($constraint) {
                      $constraint->aspectRatio();
@@ -168,7 +166,7 @@ class PhotosController extends Controller
                     Storage::delete('/products/'.$file->filename);
                 }
         $data = [
-            'filename'          => $path,
+            'filename'          => $imagename,
             'mime'              => $mime,
             'original_filename' => $request->upload->getClientOriginalName(),
             ];

@@ -42,8 +42,9 @@ Route::group(['prefix' => 'profile'], function() {
 Route::group(['prefix' => 'maps'], function() {
     Route::post('create', 'LocationController@create');
     Route::put('edit','LocationController@update');
+    Route::post('mylocation','LocationController@mylocation');
     Route::get('show/{id}', 'LocationController@show');
-    Route::get('show', 'LocationController@index');
+    Route::get('warungmarkers', 'LocationController@warung_markers');
 });
 
 Route::group(['prefix' => 'products'], function() {
