@@ -76,6 +76,9 @@ class ProductController extends Controller
     public function show()
     {
         $user = JWTAuth::parseToken()->authenticate();
+        if (empty($user->shop->id)) {
+            return response()->json(['error' => 'Anda tidak diijinkan untuk mengakses ini'], 403);
+        }
         $products = $user->shop->products;
         return fractal()
             ->collection($products)
@@ -102,6 +105,7 @@ class ProductController extends Controller
             ->transformWith(new ProductsTransformer)
             ->includeShop()
             ->includePhotos()
+            ->addMeta(['success' => 'Foto pada produk ini'])
             ->toArray();
     }
     /**

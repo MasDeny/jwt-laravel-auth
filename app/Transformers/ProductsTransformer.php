@@ -28,6 +28,7 @@ class ProductsTransformer extends TransformerAbstract
             'product_name'  => $products->product_name,
             'product_type'  => $products->product_type,
             'price'         => $products->price,
+            'photo'         => $products->products_photos === null ? url('/products/default.png') : url('/').'/products/'.$products->products_photos->filename,
             'detail'        => route('product.show',$products->id)
         ];
     }
