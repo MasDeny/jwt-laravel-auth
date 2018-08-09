@@ -18,6 +18,7 @@ class SearchController extends Controller
     	return fractal()
             ->collection($products)
             ->transformWith(new ProductsTransformer)
+            ->addMeta(['success' => 'ini nih produk yang kamu cari'])
             ->toArray();
     }
 
@@ -32,6 +33,7 @@ class SearchController extends Controller
     	return fractal()
             ->collection($products)
             ->transformWith(new ProductsTransformer)
+            ->addMeta(['success' => 'ini nih produk yang kamu cari'])
             ->toArray();
     }
 
@@ -46,6 +48,7 @@ class SearchController extends Controller
     	return fractal()
             ->collection($products)
             ->transformWith(new ProductsTransformer)
+            ->addMeta(['success' => 'ini nih produk yang kamu cari'])
             ->toArray();
     	
     }
@@ -61,6 +64,7 @@ class SearchController extends Controller
     	return fractal()
             ->collection($products)
             ->transformWith(new ProductsTransformer)
+            ->addMeta(['success' => 'ini nih produk yang kamu cari'])
             ->toArray();
     }
 
@@ -83,6 +87,7 @@ class SearchController extends Controller
     	return fractal()
             ->collection($products)
             ->transformWith(new ProductsTransformer)
+            ->addMeta(['success' => 'ini nih produk yang kamu cari'])
             ->toArray();
     }
 
@@ -99,6 +104,7 @@ class SearchController extends Controller
     	return fractal()
             ->collection($shop)
             ->transformWith(new ShopTransformer)
+            ->addMeta(['success' => 'ini nih produk yang kamu cari'])
             ->toArray();
     }
 
@@ -121,6 +127,7 @@ class SearchController extends Controller
     	return fractal()
             ->collection($shop)
             ->transformWith(new ShopTransformer)
+            ->addMeta(['success' => 'ini nih produk yang kamu cari'])
             ->toArray();
     	
     }
@@ -132,6 +139,7 @@ class SearchController extends Controller
     	return fractal()
             ->collection($shop)
             ->transformWith(new ShopTransformer)
+            ->addMeta(['success' => 'ini nih produk yang kamu cari'])
             ->toArray();
     	
     }
@@ -143,6 +151,7 @@ class SearchController extends Controller
     	return fractal()
             ->collection($products)
             ->transformWith(new ProductsTransformer)
+            ->addMeta(['success' => 'ini nih produk yang kamu cari'])
             ->toArray();
     	
     }

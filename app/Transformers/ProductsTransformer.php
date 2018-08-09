@@ -38,9 +38,9 @@ class ProductsTransformer extends TransformerAbstract
         return $this->item($products, new ProductTransformer);
     }
 
-    public function includePhotos(Products $products)
+    public function includePhotos($products)
     {
-        $photos = $products->products_photos->get();
+        $photos = $products->products_photos->where('products_id',$products->id)->get();
         return $this->collection($photos, new PhotosTransformer);
     }
 
