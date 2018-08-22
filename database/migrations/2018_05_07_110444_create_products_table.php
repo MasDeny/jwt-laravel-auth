@@ -17,7 +17,7 @@ class CreateProductsTable extends Migration
             $table->increments('id');
             $table->string('product_name');
             $table->enum('product_type', ['food', 'drink']);
-            $table->integer('price');
+            $table->integer('price', 11);
             $table->integer('shop_id')->unsigned();
             $table->timestamps();
 
