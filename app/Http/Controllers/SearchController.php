@@ -93,9 +93,18 @@ class SearchController extends Controller
 
     public function byRating()
     {
-    	$shop = Shop::with('review')->whereHas('review', function($query) {
-    		$query->whereBetween('rating', ['4', '5']);
-    	})->orderBy('shop_name', 'desc')->get();
+        $shop = Shop::where('rating', '>=', 3)
+                ->leftJoin('reviews', 'shops.id', '=', 'reviews.shop_id')
+                ->select(array('shops.*', DB::raw('AVG(rating) as avg_rating')))
+                ->groupBy('id')
+                ->orderBy('avg_rating', 'desc')
+                ->get();
+
+    	// $shop = Shop::with('review')->whereHas('review', function($query) {
+    	// 	$query->where('rating', '>=', 3);
+    	// })->orderBy('shop_name', 'desc')->get();
+
+        //dd($shop);
 
     	if (json_decode($shop) == []) {
     		return response()->json(['success' => 'yahh , ga ada nih yang kamu cari']);
