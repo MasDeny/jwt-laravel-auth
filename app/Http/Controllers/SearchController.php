@@ -155,7 +155,8 @@ class SearchController extends Controller
 
     public function byNewestProduct()
     {
-    	$products = Products::orderBy('created_at', 'asc')->paginate(5);
+    	$products = Products::orderBy('created_at', 'asc')
+                    ->distinct()->groupBy('shop_id')->paginate(5);
     	
     	return fractal()
             ->collection($products)
