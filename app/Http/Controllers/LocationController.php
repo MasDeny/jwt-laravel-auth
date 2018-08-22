@@ -13,32 +13,17 @@ class LocationController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.auth', 
-            ['except' => ['show','index','warung_markers']]);
+            ['except' => ['warungs','create','update','mylocation']]);
     }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $maps = Location::get();
-        return fractal()
-            ->collection($maps)
-            ->transformWith(new MapsTransformer)
-            ->includeDetail()
-            ->toArray();
-    }
-
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
+     //toUser(request('token'))
     public function create(Request $request)
     {
-        $this->user = JWTAuth::parseToken()->authenticate();
+        $this->user = JWTAuth::toUser(request('token'));
         if (empty($this->user->shop->id)) {
             return response()->json(['error' => 'Anda tidak diijinkan untuk mengakses ini'], 403);
         }
@@ -72,26 +57,15 @@ class LocationController extends Controller
             return response()->json(['error' => 'Pembuatan profil gagal, periksa kembali koneksi anda'], 500);
         }
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $maps = Location::findOrFail($id);
-        return fractal()
-            ->item($maps)
-            ->transformWith(new MapsTransformer)
-            ->includeDetail()
-            ->toArray();
-    }
 
-    function Warung_Markers(){
+    function warungs(){
+        $lt = floatval(@$_GET['lt']);
+        $lng = floatval(@$_GET['lng']);
         $data = [];
-        foreach (Location::get() as $key => $v) {
+        foreach (Location::selectRaw('*,SQRT(POW('.$lt.'-`lat`,2)+POW('.$lng.'-`long`,2)*113.319) as ecludian')
+                    ->orderBy('ecludian','ASC')->get() as $key => $v) {
             $data[] = [
+                'ecludian' => $v->ecludian,
                 'places'    => $v->name_location,
                 'latitude'  => $v->lat,
                 'longitude' => $v->long,
@@ -103,8 +77,9 @@ class LocationController extends Controller
                 ],
             ];
         }
-        return json_encode(['data'=>$data]);
+        return json_encode(['data'=>$data,'resp'=>$_GET]);
     }
+    
 
     /**
      * Update the specified resource in storage.
@@ -113,9 +88,8 @@ class LocationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
-    {
-        $this->user = JWTAuth::parseToken()->authenticate();
+    function update(){
+        $this->user = JWTAuth::toUser(request('token'));
         $location = $this->user->shop->location;
         $data = [
             'name_location' => request('place'),
@@ -130,6 +104,7 @@ class LocationController extends Controller
             ->transformWith(new MapsTransformer)
             ->addMeta(['success'  => 'Lokasi telah diperbaharui'])
             ->toArray();
+
     }
 
     function myLocation(){
@@ -145,4 +120,25 @@ class LocationController extends Controller
             echo "string";
         }
     }
+
+    
+    // public function update(Request $request)
+    // {
+    //     $this->user = JWTAuth::parseToken()->authenticate();
+
+    //     $location = $this->user->shop->location;
+    //     $data = [
+    //         'name_location' => request('place'),
+    //         'lat'           => request('latitude'),
+    //         'long'          => request('longitude'),
+    //         ];
+
+    //     $location->where('shop_id', $this->user->shop->id)->update($data);
+    //     $location = $this->user->shop->location;
+    //     return fractal()
+    //         ->item($location)
+    //         ->transformWith(new MapsTransformer)
+    //         ->addMeta(['success'  => 'Lokasi telah diperbaharui'])
+    //         ->toArray();
+    // }
 }
