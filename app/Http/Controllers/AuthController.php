@@ -181,6 +181,10 @@ class AuthController extends Controller
     {
         $key_code = Keygen::numeric(5)->generate();
         $email = $request->email;
+        $email_validate = !!User::where('email', $email)->first();
+        if (!$email_validate) {
+            return response()->json(['error' => 'Kami tidak dapat menemukan akun dengan email '.$email], 404);
+        }
         try {
         Mail::send('emails.reset', ['key_code' => $key_code], function ($message) use($email)
         {
